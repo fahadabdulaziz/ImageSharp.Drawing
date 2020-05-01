@@ -5,10 +5,10 @@ using System;
 using System.Linq;
 using System.Text;
 using SixLabors.Fonts;
+using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.Drawing.Tests.TestUtilities.ImageComparison;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Drawing.Tests.TestUtilities.ImageComparison;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -36,7 +36,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing.Text
         [Theory]
         [WithSolidFilledImages(276, 336, "White", PixelTypes.Rgba32)]
         public void DoesntThrowExceptionWhenOverlappingRightEdge_Issue688<TPixel>(TestImageProvider<TPixel> provider)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             Font font = CreateFont("OpenSans-Regular.ttf", 36);
             var color = Color.Black;
@@ -68,7 +68,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing.Text
         [Theory]
         [WithSolidFilledImages(1500, 500, "White", PixelTypes.Rgba32)]
         public void DoesntThrowExceptionWhenOverlappingRightEdge_Issue688_2<TPixel>(TestImageProvider<TPixel> provider)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             using (Image<TPixel> img = provider.GetImage())
             {
@@ -84,6 +84,22 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing.Text
 
 
         [Theory]
+        [WithSolidFilledImages(200, 200, "White", PixelTypes.Rgba32)]
+        public void OpenSansJWithNoneZeroShouldntExtendPastGlyphe<TPixel>(TestImageProvider<TPixel> provider)
+            where TPixel : unmanaged, IPixel<TPixel>
+        {
+            using (Image<TPixel> img = provider.GetImage())
+            {
+                Font font = CreateFont("OpenSans-Regular.ttf", 50);
+                Color color = Color.Black;
+
+                img.Mutate(ctx => ctx.DrawText(TestText, font, Color.Black, new PointF(-50, 2)));
+
+                Assert.Equal(Color.White.ToPixel<TPixel>(), img[173, 2]);
+            }
+        }
+
+        [Theory]
         [WithSolidFilledImages(200, 100, "White", PixelTypes.Rgba32, 50, 0, 0, "SixLaborsSampleAB.woff", AB)]
         [WithSolidFilledImages(900, 100, "White", PixelTypes.Rgba32, 50, 0, 0, "OpenSans-Regular.ttf", TestText)]
         [WithSolidFilledImages(400, 40, "White", PixelTypes.Rgba32, 20, 0, 0, "OpenSans-Regular.ttf", TestText)]
@@ -95,7 +111,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing.Text
             int y,
             string fontName,
             string text)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             Font font = CreateFont(fontName, fontSize);
             var color = Color.Black;
@@ -119,7 +135,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing.Text
         [WithSolidFilledImages(2480, 3508, "White", PixelTypes.Rgba32)]
         public void FontShapesAreRenderedCorrectly_LargeText<TPixel>(
             TestImageProvider<TPixel> provider)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             Font font = CreateFont("OpenSans-Regular.ttf", 36);
 
@@ -170,7 +186,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing.Text
             int y,
             string fontName,
             string text)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             Font font = CreateFont(fontName, fontSize);
             var color = Color.Black;
@@ -197,7 +213,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing.Text
             int y,
             string fontName,
             string text)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             Font font = CreateFont(fontName, fontSize);
             var color = Color.Black;
@@ -216,7 +232,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing.Text
         [Theory]
         [WithSolidFilledImages(1000, 1500, "White", PixelTypes.Rgba32, "OpenSans-Regular.ttf")]
         public void TextPositioningIsRobust<TPixel>(TestImageProvider<TPixel> provider, string fontName)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             Font font = CreateFont(fontName, 30);
 

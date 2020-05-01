@@ -3,12 +3,12 @@
 
 using System;
 using System.Buffers;
-
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.Memory;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing.Processors;
 
-namespace SixLabors.ImageSharp.Processing.Processors.Drawing
+namespace SixLabors.ImageSharp.Drawing.Processing.Processors.Drawing
 {
     /// <summary>
     /// Using a brush and a shape fills shape with contents of brush the
@@ -16,7 +16,7 @@ namespace SixLabors.ImageSharp.Processing.Processors.Drawing
     /// <typeparam name="TPixel">The type of the color.</typeparam>
     /// <seealso cref="ImageProcessor{TPixel}" />
     internal class FillRegionProcessor<TPixel> : ImageProcessor<TPixel>
-        where TPixel : struct, IPixel<TPixel>
+        where TPixel : unmanaged, IPixel<TPixel>
     {
         private readonly FillRegionProcessor definition;
 

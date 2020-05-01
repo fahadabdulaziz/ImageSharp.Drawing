@@ -2,9 +2,8 @@
 // Licensed under the Apache License, Version 2.0.
 
 using System.Numerics;
-
+using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 
 using Xunit;
 
@@ -18,7 +17,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         [WithSolidFilledImages(300, 400, "Blue", PixelTypes.Rgba32, true, false)]
         [WithSolidFilledImages(300, 400, "Blue", PixelTypes.Rgba32, false, true)]
         public void ComplexPolygon_SolidFill<TPixel>(TestImageProvider<TPixel> provider, bool overlap, bool transparent)
-            where TPixel :struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             var simplePath = new Polygon(new LinearLineSegment(
                 new Vector2(10, 10),

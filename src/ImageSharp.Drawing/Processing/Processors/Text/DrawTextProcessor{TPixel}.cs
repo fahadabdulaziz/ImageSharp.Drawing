@@ -8,16 +8,16 @@ using System.Numerics;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp.Memory;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Utils;
+using SixLabors.ImageSharp.Processing.Processors;
 
-namespace SixLabors.ImageSharp.Processing.Processors.Text
+namespace SixLabors.ImageSharp.Drawing.Processing.Processors.Text
 {
     /// <summary>
     /// Using the brush as a source of pixels colors blends the brush color with source.
     /// </summary>
     /// <typeparam name="TPixel">The pixel format.</typeparam>
     internal class DrawTextProcessor<TPixel> : ImageProcessor<TPixel>
-        where TPixel : struct, IPixel<TPixel>
+        where TPixel : unmanaged, IPixel<TPixel>
     {
         private CachingGlyphRenderer textRenderer;
 
@@ -87,6 +87,17 @@ namespace SixLabors.ImageSharp.Processing.Processors.Text
                             int startY = operation.Location.Y;
                             int startX = operation.Location.X;
                             int offsetSpan = 0;
+
+                            if (startX + buffer.Height < 0)
+                            {
+                                continue;
+                            }
+
+                            if (startX + buffer.Width < 0)
+                            {
+                                continue;
+                            }
+
                             if (startX < 0)
                             {
                                 offsetSpan = -startX;
@@ -335,7 +346,7 @@ namespace SixLabors.ImageSharp.Processing.Processors.Text
                         {
                             var start = new PointF(path.Bounds.Left - 1, subPixel);
                             var end = new PointF(path.Bounds.Right + 1, subPixel);
-                            int pointsFound = path.FindIntersections(start, end, intersectionSpan);
+                            int pointsFound = path.FindIntersections(start, end, intersectionSpan, IntersectionRule.Nonzero);
 
                             if (pointsFound == 0)
                             {

@@ -7,7 +7,7 @@ using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.Memory;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace SixLabors.ImageSharp.Processing
+namespace SixLabors.ImageSharp.Drawing.Processing
 {
     /// <summary>
     /// A primitive that converts a point into a color for discovering the fill color based on an implementation.
@@ -15,7 +15,7 @@ namespace SixLabors.ImageSharp.Processing
     /// <typeparam name="TPixel">The pixel format.</typeparam>
     /// <seealso cref="IDisposable" />
     public abstract class BrushApplicator<TPixel> : IDisposable
-        where TPixel : struct, IPixel<TPixel>
+        where TPixel : unmanaged, IPixel<TPixel>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BrushApplicator{TPixel}"/> class.

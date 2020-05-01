@@ -2,12 +2,13 @@
 // Licensed under the Apache License, Version 2.0.
 
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using SixLabors.ImageSharp.Utils;
+using Orientation = SixLabors.ImageSharp.Drawing.InternalPath.Orientation;
 
-namespace SixLabors.ImageSharp
+namespace SixLabors.ImageSharp.Drawing
 {
     /// <summary>
     /// Represents a complex polygon made up of one or more shapes overlayed on each other, where overlaps causes holes.
@@ -16,6 +17,7 @@ namespace SixLabors.ImageSharp
     public sealed class ComplexPolygon : IPath
     {
         private readonly IPath[] paths;
+        private List<InternalPath> internalPaths = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ComplexPolygon" /> class.
@@ -191,23 +193,66 @@ namespace SixLabors.ImageSharp
         /// <inheritdoc />
         public int FindIntersections(PointF start, PointF end, Span<PointF> buffer, IntersectionRule intersectionRule)
         {
+            this.EnsureInternalPathsInitalized();
+
             int totalAdded = 0;
-            for (int i = 0; i < this.paths.Length; i++)
+            Orientation[] orientations = ArrayPool<Orientation>.Shared.Rent(buffer.Length); // the largest number of intersections of any sub path of the set is the max size with need for this buffer.
+            Span<Orientation> orientationsSpan = orientations;
+            try
             {
-                Span<PointF> subBuffer = buffer.Slice(totalAdded);
-                int added = this.paths[i].FindIntersections(start, end, subBuffer, intersectionRule);
-                totalAdded += added;
-            }
+                foreach (var ip in this.internalPaths)
+                {
+                    Span<PointF> subBuffer = buffer.Slice(totalAdded);
+                    Span<Orientation> subOrientationsSpan = orientationsSpan.Slice(totalAdded);
 
-            Span<float> distances = stackalloc float[totalAdded];
-            for (int i = 0; i < totalAdded; i++)
+                    var position = ip.FindIntersectionsWithOrientation(start, end, subBuffer, subOrientationsSpan);
+                    totalAdded += position;
+                }
+
+                Span<float> distances = stackalloc float[totalAdded];
+                for (int i = 0; i < totalAdded; i++)
+                {
+                    distances[i] = Vector2.DistanceSquared(start, buffer[i]);
+                }
+
+                var activeBuffer = buffer.Slice(0, totalAdded);
+                var activeOrientationsSpan = orientationsSpan.Slice(0, totalAdded);
+                QuickSort.Sort(distances, activeBuffer, activeOrientationsSpan);
+
+                if (intersectionRule == IntersectionRule.Nonzero)
+                {
+                    totalAdded = InternalPath.ApplyNonZeroIntersectionRules(activeBuffer, activeOrientationsSpan);
+                }
+            }
+            finally
             {
-                distances[i] = Vector2.DistanceSquared(start, buffer[i]);
+                ArrayPool<Orientation>.Shared.Return(orientations);
             }
-
-            QuickSort.Sort(distances, buffer.Slice(0, totalAdded));
 
             return totalAdded;
+        }
+
+        private void EnsureInternalPathsInitalized()
+        {
+            if (this.internalPaths == null)
+            {
+                lock (this.paths)
+                {
+                    if (this.internalPaths == null)
+                    {
+                        this.internalPaths = new List<InternalPath>(this.paths.Length);
+
+                        foreach (var p in this.paths)
+                        {
+                            foreach (var s in p.Flatten())
+                            {
+                                var ip = new InternalPath(s.Points, s.IsClosed);
+                                this.internalPaths.Add(ip);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -298,7 +343,7 @@ namespace SixLabors.ImageSharp
         }
 
         /// <summary>
-        /// Calculates the the point a certain distance a path.
+        /// Calculates the point a certain distance a path.
         /// </summary>
         /// <param name="distanceAlongPath">The distance along the path to find details of.</param>
         /// <returns>

@@ -9,7 +9,7 @@ using System.Numerics;
 using SixLabors.ImageSharp.Memory;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace SixLabors.ImageSharp.Processing
+namespace SixLabors.ImageSharp.Drawing.Processing
 {
     /// <summary>
     /// Provides an implementation of a brush for painting gradients between multiple color positions in 2D coordinates.
@@ -86,7 +86,7 @@ namespace SixLabors.ImageSharp.Processing
             GraphicsOptions options,
             ImageFrame<TPixel> source,
             RectangleF region)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             return new PathGradientBrushApplicator<TPixel>(configuration, options, source, this.edges, this.centerColor);
         }
@@ -203,7 +203,7 @@ namespace SixLabors.ImageSharp.Processing
         /// The path gradient brush applicator.
         /// </summary>
         private class PathGradientBrushApplicator<TPixel> : BrushApplicator<TPixel>
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             private readonly PointF center;
 

@@ -15,6 +15,7 @@ using Xunit;
 namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
 {
     using SixLabors.ImageSharp.Advanced;
+    using SixLabors.ImageSharp.Drawing.Processing;
     using SixLabors.ImageSharp.Drawing.Tests.TestUtilities.ImageComparison;
 
     [GroupOutput("Drawing/GradientBrushes")]
@@ -25,7 +26,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         [Theory]
         [WithBlankImages(10, 10, PixelTypes.Rgba32)]
         public void WithEqualColorsReturnsUnicolorImage<TPixel>(TestImageProvider<TPixel> provider)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             using (Image<TPixel> image = provider.GetImage())
             {
@@ -52,7 +53,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         [WithBlankImages(20, 10, PixelTypes.Argb32)]
         [WithBlankImages(20, 10, PixelTypes.Rgb24)]
         public void DoesNotDependOnSinglePixelType<TPixel>(TestImageProvider<TPixel> provider)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             provider.VerifyOperation(
                 TolerantComparer,
@@ -73,7 +74,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         [Theory]
         [WithBlankImages(500, 10, PixelTypes.Rgba32)]
         public void HorizontalReturnsUnicolorColumns<TPixel>(TestImageProvider<TPixel> provider)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             provider.VerifyOperation(
                 TolerantComparer,
@@ -103,7 +104,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         public void HorizontalGradientWithRepMode<TPixel>(
             TestImageProvider<TPixel> provider,
             GradientRepetitionMode repetitionMode)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             provider.VerifyOperation(
                 TolerantComparer,
@@ -133,7 +134,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         public void WithDoubledStopsProduceDashedPatterns<TPixel>(
             TestImageProvider<TPixel> provider,
             float[] pattern)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             string variant = string.Join("_", pattern.Select(i => i.ToString(CultureInfo.InvariantCulture)));
 
@@ -192,7 +193,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         [WithBlankImages(10, 500, PixelTypes.Rgba32)]
         public void VerticalBrushReturnsUnicolorRows<TPixel>(
             TestImageProvider<TPixel> provider)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             provider.VerifyOperation(
                 image =>
@@ -244,7 +245,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         public void DiagonalReturnsCorrectImages<TPixel>(
             TestImageProvider<TPixel> provider,
             ImageCorner startCorner)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             using (Image<TPixel> image = provider.GetImage())
             {
@@ -309,7 +310,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
             int endX, int endY,
             float[] stopPositions,
             int[] stopColorCodes)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             Color[] colors =
             {
@@ -355,7 +356,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
             int endX, int endY,
             float[] stopPositions,
             int[] stopColorCodes)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             Color[] colors =
             {
@@ -396,7 +397,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         [Theory]
         [WithBlankImages(200, 200, PixelTypes.Rgba32)]
         public void GradientsWithTransparencyOnExistingBackground<TPixel>(TestImageProvider<TPixel> provider)
-                    where TPixel : struct, IPixel<TPixel>
+                    where TPixel : unmanaged, IPixel<TPixel>
         {
             provider.VerifyOperation(
                 image =>
@@ -434,7 +435,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         [Theory]
         [WithBlankImages(200, 200, PixelTypes.Rgb24)]
         public void BrushApplicatorIsThreadSafeIssue1044<TPixel>(TestImageProvider<TPixel> provider)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             provider.VerifyOperation(
                 TolerantComparer,

@@ -1,10 +1,9 @@
-﻿// Copyright (c) Six Labors and contributors.
+// Copyright (c) Six Labors and contributors.
 // Licensed under the Apache License, Version 2.0.
 
 using System;
-
+using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 
 using Xunit;
 
@@ -19,7 +18,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         [WithTestPatternImages(100, 100, PixelTypes.Rgba32, "Red", "Blue", 0.2f)]
         [WithTestPatternImages(100, 100, PixelTypes.Rgba32, "Red", "Blue", 0.6f)]
         public void Recolor<TPixel>(TestImageProvider<TPixel> provider, string sourceColorName, string targetColorName, float threshold)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             Color sourceColor = TestUtils.GetColorByName(sourceColorName);
             Color targetColor = TestUtils.GetColorByName(targetColorName);
@@ -28,12 +27,12 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
             FormattableString testInfo = $"{sourceColorName}-{targetColorName}-{threshold}";
             provider.RunValidatingProcessorTest(x => x.Fill(brush), testInfo);
         }
-        
+
         [Theory]
         [WithFile(TestImages.Png.CalliphoraPartial, PixelTypes.Bgra32, "Yellow", "Pink", 0.5f)]
         [WithTestPatternImages(100, 100, PixelTypes.Rgba32, "Red", "Blue", 0.2f)]
         public void Recolor_InBox<TPixel>(TestImageProvider<TPixel> provider, string sourceColorName, string targetColorName, float threshold)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             Color sourceColor = TestUtils.GetColorByName(sourceColorName);
             Color targetColor = TestUtils.GetColorByName(targetColorName);

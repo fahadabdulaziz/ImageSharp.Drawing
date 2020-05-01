@@ -2,11 +2,10 @@
 // Licensed under the Apache License, Version 2.0.
 
 using System;
-
+using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.Drawing.Tests.TestUtilities.ImageComparison;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Drawing.Tests.TestUtilities.ImageComparison;
-
 using Xunit;
 
 namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
@@ -19,7 +18,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         [Theory]
         [WithBlankImages(10, 10, PixelTypes.Rgba32)]
         public void FillRectangleWithDifferentColors<TPixel>(TestImageProvider<TPixel> provider)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             provider.VerifyOperation(
                 TolerantComparer,
@@ -38,7 +37,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         [Theory]
         [WithBlankImages(10, 10, PixelTypes.Rgba32)]
         public void FillTriangleWithDifferentColors<TPixel>(TestImageProvider<TPixel> provider)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             provider.VerifyOperation(
                 TolerantComparer,
@@ -57,7 +56,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         [Theory]
         [WithBlankImages(10, 10, PixelTypes.Rgba32)]
         public void FillRectangleWithSingleColor<TPixel>(TestImageProvider<TPixel> provider)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             using (Image<TPixel> image = provider.GetImage())
             {
@@ -75,7 +74,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         [Theory]
         [WithBlankImages(10, 10, PixelTypes.Rgba32)]
         public void ShouldRotateTheColorsWhenThereAreMorePoints<TPixel>(TestImageProvider<TPixel> provider)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             provider.VerifyOperation(
                 TolerantComparer,
@@ -94,7 +93,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         [Theory]
         [WithBlankImages(10, 10, PixelTypes.Rgba32)]
         public void FillWithCustomCenterColor<TPixel>(TestImageProvider<TPixel> provider)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             provider.VerifyOperation(
                 TolerantComparer,

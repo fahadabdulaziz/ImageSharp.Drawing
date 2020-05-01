@@ -1,6 +1,7 @@
-﻿// Copyright (c) Six Labors and contributors.
+// Copyright (c) Six Labors and contributors.
 // Licensed under the Apache License, Version 2.0.
 
+using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
@@ -26,11 +27,11 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
                 }
             }
         }
-        
+
         [Theory]
         [WithTestPatternImages(200, 200, PixelTypes.Rgba32 | PixelTypes.Bgra32)]
         public void UseBrushOfDifferentPixelType<TPixel>(TestImageProvider<TPixel> provider)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             byte[] data = TestFile.Create(TestImages.Png.Ducky).Bytes;
             using (Image<TPixel> background = provider.GetImage())
@@ -41,7 +42,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
                 var brush = new ImageBrush(overlay);
                 background.Mutate(c => c.Fill(brush));
 
-                background.DebugSave(provider, appendSourceFileOrDescription : false);
+                background.DebugSave(provider, appendSourceFileOrDescription: false);
                 background.CompareToReferenceOutput(provider, appendSourceFileOrDescription: false);
             }
         }

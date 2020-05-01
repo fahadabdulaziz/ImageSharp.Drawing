@@ -3,9 +3,8 @@
 
 using System;
 using System.Numerics;
-
+using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 using Xunit;
 
 namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
@@ -13,19 +12,20 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
     [GroupOutput("Drawing")]
     public class DrawPathTests
     {
-        public static readonly TheoryData<string, byte, float> DrawPathData = new TheoryData<string, byte, float>
-                                                                                {
-                                                                                    { "White", 255, 1.5f },
-                                                                                    { "Red", 255, 3 },
-                                                                                    { "HotPink", 255, 5 },
-                                                                                    { "HotPink", 150, 5 },
-                                                                                    { "White", 255, 15 },
-                                                                                };
+        public static readonly TheoryData<string, byte, float> DrawPathData =
+            new TheoryData<string, byte, float>
+            {
+                { "White", 255, 1.5f },
+                { "Red", 255, 3 },
+                { "HotPink", 255, 5 },
+                { "HotPink", 150, 5 },
+                { "White", 255, 15 },
+            };
 
         [Theory]
         [WithSolidFilledImages(nameof(DrawPathData), 300, 450, "Blue", PixelTypes.Rgba32)]
         public void DrawPath<TPixel>(TestImageProvider<TPixel> provider, string colorName, byte alpha, float thickness)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             var linearSegment = new LinearLineSegment(
                 new Vector2(10, 10),
@@ -55,7 +55,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         [Theory]
         [WithSolidFilledImages(256, 256, "Black", PixelTypes.Rgba32)]
         public void PathExtendingOffEdgeOfImageShouldNotBeCropped<TPixel>(TestImageProvider<TPixel> provider)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             var color = Color.White;
             Pen pen = Pens.Solid(color, 5f);

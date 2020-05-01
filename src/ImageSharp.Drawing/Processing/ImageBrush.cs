@@ -8,7 +8,7 @@ using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.Memory;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace SixLabors.ImageSharp.Processing
+namespace SixLabors.ImageSharp.Drawing.Processing
 {
     /// <summary>
     /// Provides an implementation of an image brush for painting images within areas.
@@ -35,7 +35,7 @@ namespace SixLabors.ImageSharp.Processing
             GraphicsOptions options,
             ImageFrame<TPixel> source,
             RectangleF region)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             if (this.image is Image<TPixel> specificImage)
             {
@@ -51,7 +51,7 @@ namespace SixLabors.ImageSharp.Processing
         /// The image brush applicator.
         /// </summary>
         private class ImageBrushApplicator<TPixel> : BrushApplicator<TPixel>
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             private ImageFrame<TPixel> sourceFrame;
 

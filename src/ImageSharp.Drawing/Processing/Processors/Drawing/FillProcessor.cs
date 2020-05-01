@@ -2,8 +2,9 @@
 // Licensed under the Apache License, Version 2.0.
 
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing.Processors;
 
-namespace SixLabors.ImageSharp.Processing.Processors.Drawing
+namespace SixLabors.ImageSharp.Drawing.Processing.Processors.Drawing
 {
     /// <summary>
     /// Defines a processor to fill an <see cref="Image"/> with the given <see cref="IBrush"/>
@@ -34,7 +35,7 @@ namespace SixLabors.ImageSharp.Processing.Processors.Drawing
 
         /// <inheritdoc />
         public IImageProcessor<TPixel> CreatePixelSpecificProcessor<TPixel>(Configuration configuration, Image<TPixel> source, Rectangle sourceRectangle)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
             => new FillProcessor<TPixel>(configuration, this, source, sourceRectangle);
     }
 }

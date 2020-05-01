@@ -1,10 +1,9 @@
-﻿// Copyright (c) Six Labors and contributors.
+// Copyright (c) Six Labors and contributors.
 // Licensed under the Apache License, Version 2.0.
 
 using System.Numerics;
-
+using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 
 using Xunit;
 
@@ -19,7 +18,7 @@ namespace SixLabors.ImageSharp.Drawing.Tests.Drawing
         [WithBasicTestPatternImages(250, 350, PixelTypes.Rgba32, false, true, false)]
         [WithBasicTestPatternImages(250, 350, PixelTypes.Rgba32, false, false, true)]
         public void DrawComplexPolygon<TPixel>(TestImageProvider<TPixel> provider, bool overlap, bool transparent, bool dashed)
-            where TPixel :struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             var simplePath = new Polygon(new LinearLineSegment(
                 new Vector2(10, 10),

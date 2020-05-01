@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0.
 
 using System;
-
 using SixLabors.Fonts;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing.Processors;
 
-namespace SixLabors.ImageSharp.Processing.Processors.Text
+namespace SixLabors.ImageSharp.Drawing.Processing.Processors.Text
 {
     /// <summary>
     /// Defines a processor to draw text on an <see cref="Image"/>.
@@ -72,7 +72,7 @@ namespace SixLabors.ImageSharp.Processing.Processors.Text
 
         /// <inheritdoc />
         public IImageProcessor<TPixel> CreatePixelSpecificProcessor<TPixel>(Configuration configuration, Image<TPixel> source, Rectangle sourceRectangle)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
             => new DrawTextProcessor<TPixel>(configuration, this, source, sourceRectangle);
     }
 }

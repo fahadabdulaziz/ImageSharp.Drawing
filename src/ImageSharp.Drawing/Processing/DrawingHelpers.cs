@@ -3,7 +3,7 @@
 
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace SixLabors.ImageSharp.Processing
+namespace SixLabors.ImageSharp.Drawing.Processing
 {
     internal static class DrawingHelpers
     {
@@ -11,7 +11,7 @@ namespace SixLabors.ImageSharp.Processing
         /// Convert a <see cref="DenseMatrix{Color}"/> to a <see cref="DenseMatrix{T}"/> of the given pixel type.
         /// </summary>
         public static DenseMatrix<TPixel> ToPixelMatrix<TPixel>(this DenseMatrix<Color> colorMatrix, Configuration configuration)
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             var result = new DenseMatrix<TPixel>(colorMatrix.Columns, colorMatrix.Rows);
             Color.ToPixel(configuration, colorMatrix.Span, result.Span);

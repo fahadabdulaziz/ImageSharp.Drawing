@@ -5,7 +5,7 @@ using System;
 using System.Numerics;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace SixLabors.ImageSharp.Processing
+namespace SixLabors.ImageSharp.Drawing.Processing
 {
     /// <summary>
     /// Base class for Gradient brushes
@@ -39,13 +39,13 @@ namespace SixLabors.ImageSharp.Processing
             GraphicsOptions options,
             ImageFrame<TPixel> source,
             RectangleF region)
-            where TPixel : struct, IPixel<TPixel>;
+            where TPixel : unmanaged, IPixel<TPixel>;
 
         /// <summary>
         /// Base class for gradient brush applicators
         /// </summary>
         internal abstract class GradientBrushApplicator<TPixel> : BrushApplicator<TPixel>
-            where TPixel : struct, IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             private static readonly TPixel Transparent = Color.Transparent.ToPixel<TPixel>();
 
